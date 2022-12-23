@@ -1,0 +1,9 @@
+Package: qemu-hello-world
+Version: 0.0.2
+Architecture: arm
+Maintainer: user@domain.tld
+Section: misc
+Description: This is an example IPK package
+Priority: optional
+Depends:
+Source: ../../
