@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 
 #Set build system
 set(CMAKE_GENERATOR "Unix Makefiles")
-message("generator is set to ${CMAKE_GENERATOR}")
+message("GENERATOR: ${CMAKE_GENERATOR}")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 #Set system
@@ -11,7 +11,13 @@ set(CMAKE_SYSTEM_NAME       Generic)
 set(CMAKE_SYSTEM_PROCESSOR  arm)
 
 # Set a name for the project
-project(qemu-hello-world)
+project(qemu-hello-world 
+        VERSION 0.0.2
+        LANGUAGES C)
+
+message("PROJECT VERSION MAJOR: ${PROJECT_VERSION_MAJOR}")
+message("PROJECT VERSION MINOR: ${PROJECT_VERSION_MINOR}")        
+message("PROJECT VERSION PATCH: ${PROJECT_VERSION_PATCH}")
 
 # use the C90 standard
 set(CMAKE_C_STANDARD 90)
@@ -41,7 +47,6 @@ file(GLOB MAIN_C_SOURCE
     "${PROJECT_SOURCE_DIR}/src/*.c"   # i.e. `src/main.c`, but not `src/d/f.c`
     ##"${PROJECT_SOURCE_DIR}/src/*/*.cpp" # i.e. `src/d/f.c`
 )
-
 
 # Fill in the directories of your header files here.
 include_directories(
