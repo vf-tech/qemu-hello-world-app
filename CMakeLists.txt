@@ -13,8 +13,12 @@ set(CMAKE_SYSTEM_PROCESSOR  arm)
 # Set a name for the project
 project(qemu-hello-world)
 
+# use the C90 standard
+set(CMAKE_C_STANDARD 90)
+set(CMAKE_C_STANDARD_REQUIRED True)
+
 # Set cross compiler
-set(CROSS_TARGET_TRIPLET "/home/malinbay/workspace/qemu/buildroot-2018.08/output/host/bin/arm-none-linux-gnueabi-")
+set(CROSS_TARGET_TRIPLET "/home/malinbay/workspace/qemu/fw/buildroot-2018.08/output/host/bin/arm-none-linux-gnueabi-")
 
 # Prepend the cross-compiler prefix to the used tools.
 set(CMAKE_C_COMPILER    "${CROSS_TARGET_TRIPLET}gcc")
@@ -32,14 +36,19 @@ set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
 
 # Set source files
-set(qemu-hello-world_SOURCES "${CMAKE_SOURCE_DIR}/src/main.c")
+##set(qemu-hello-world_SOURCES "${PROJECT_SOURCE_DIR}/src/main.c")
+file(GLOB MAIN_C_SOURCE
+    "${PROJECT_SOURCE_DIR}/src/*.c"   # i.e. `src/main.c`, but not `src/d/f.c`
+    ##"${PROJECT_SOURCE_DIR}/src/*/*.cpp" # i.e. `src/d/f.c`
+)
+
 
 # Fill in the directories of your header files here.
 include_directories(
-    "${BASE_DIR}/inc"
+    "${PROJECT_SOURCE_DIR}/inc"
 )
 
 # Create an executable with the source code file
 add_executable(qemu-hello-world
-    ${qemu-hello-world_SOURCES}
+    ${MAIN_C_SOURCE}
 )
