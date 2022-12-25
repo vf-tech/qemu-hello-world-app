@@ -7,7 +7,7 @@ echo $PACKAGE_VER
 
 cp build/$PACKAGE opkg-build/root/
 cd opkg-build
-/home/malinbay/workspace/qemu/buildroot-2018.08/output/host/bin/opkg-build .
+/home/malinbay/workspace/qemu/fw/buildroot-2018.08/output/host/bin/opkg-build .
 
 exit $?
 
