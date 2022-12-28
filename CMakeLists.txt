@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 #Set build system
 set(CMAKE_GENERATOR "Unix Makefiles")
 message("GENERATOR: ${CMAKE_GENERATOR}")
-set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 #Set system
 set(CMAKE_SYSTEM_NAME       Generic)
@@ -25,7 +25,7 @@ set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
 
 # Set cross compiler
-set(ARM_TOOLCHAIN_DIR       "/home/malinbay/workspace/qemu/fw/buildroot-2018.08/output/host/bin/")
+set(ARM_TOOLCHAIN_DIR       "/opt/qemu-versatilepb-sdk/bin/")
 set(ARM_TOOLCHAIN_PREFIX    "${ARM_TOOLCHAIN_DIR}arm-none-linux-gnueabi-")
 
 # Prepend the cross-compiler prefix to the used tools.
