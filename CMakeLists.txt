@@ -4,11 +4,12 @@ cmake_minimum_required(VERSION 3.5)
 #Set build system
 set(CMAKE_GENERATOR "Unix Makefiles")
 message("GENERATOR: ${CMAKE_GENERATOR}")
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 #Set system
 set(CMAKE_SYSTEM_NAME       Generic)
 set(CMAKE_SYSTEM_PROCESSOR  arm)
+set(CMAKE_CROSSCOMPILING    TRUE)
 
 # Set a name for the project
 project(qemu-hello-world 
@@ -21,16 +22,18 @@ message("PROJECT VERSION PATCH: ${PROJECT_VERSION_PATCH}")
 
 # use the C90 standard
 set(CMAKE_C_STANDARD 90)
-set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_C_STANDARD_REQUIRED TRUE)
 
 # Set cross compiler
-set(CROSS_TARGET_TRIPLET "/home/malinbay/workspace/qemu/fw/buildroot-2018.08/output/host/bin/arm-none-linux-gnueabi-")
+set(ARM_TOOLCHAIN_DIR       "/home/malinbay/workspace/qemu/fw/buildroot-2018.08/output/host/bin/")
+set(ARM_TOOLCHAIN_PREFIX    "${ARM_TOOLCHAIN_DIR}arm-none-linux-gnueabi-")
 
 # Prepend the cross-compiler prefix to the used tools.
-set(CMAKE_C_COMPILER    "${CROSS_TARGET_TRIPLET}gcc")
-set(CMAKE_CXX_COMPILER  "${CROSS_TARGET_TRIPLET}g++")
-set(CMAKE_ASM_COMPILER  "${CROSS_TARGET_TRIPLET}as")
-set(CMAKE_STRIP         "${CROSS_TARGET_TRIPLET}strip")
+set(BINUTILS_PATH       ${ARM_TOOLCHAIN_DIR})
+set(CMAKE_C_COMPILER    "${ARM_TOOLCHAIN_PREFIX}gcc")
+set(CMAKE_CXX_COMPILER  "${ARM_TOOLCHAIN_PREFIX}g++")
+set(CMAKE_ASM_COMPILER  "${ARM_TOOLCHAIN_PREFIX}as")
+set(CMAKE_STRIP         "${ARM_TOOLCHAIN_PREFIX}strip")
 
 # C/C++ Flags
 set(CMAKE_C_FLAGS       "-Wall -Wextra -Wconversion -Wsign-conversion")
@@ -52,6 +55,29 @@ file(GLOB MAIN_C_SOURCE
 include_directories(
     "${PROJECT_SOURCE_DIR}/inc"
 )
+
+# Find CppCheck executable
+find_program(CMAKE_C_CPPCHECK NAMES cppcheck)
+
+# If CppCheck executable found
+if(NOT CMAKE_C_CPPCHECK)
+    message(FATAL_ERROR "CPPCHECK NOT FOUND" ${CMAKE_C_CPPCHECK}) 
+else()
+    message(STATUS "CPPCHECK FOUND" ${CMAKE_C_CPPCHECK})
+    
+    # Print CppCheck Version
+    set(CMAKE_C_CPPCHECK_VER_CMD ${CMAKE_C_CPPCHECK} --version)
+    execute_process(COMMAND ${CMAKE_C_CPPCHECK_VER_CMD} OUTPUT_VARIABLE CPP_CHECK_VERSION)
+    message(STATUS "CPPCHECK VERSION:" ${CPP_CHECK_VERSION}) 
+
+    # Get number of CPU cores
+    include(ProcessorCount)
+    ProcessorCount(CPU_CORES)
+
+    # Config CppCheck
+    set(CMAKE_C_CPPCHECK "${CMAKE_C_CPPCHECK}" --enable=all --force) #--error-exitcode=1 -j ${CPU_CORES} --quiet .
+    message(STATUS "CPPCHECK CONFIGURATION:" ${CMAKE_C_CPPCHECK})       
+endif()
 
 # Create an executable with the source code file
 add_executable(qemu-hello-world
