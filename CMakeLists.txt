@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 #Set build system
 set(CMAKE_GENERATOR "Unix Makefiles")
 message("GENERATOR: ${CMAKE_GENERATOR}")
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 #Set system
 set(CMAKE_SYSTEM_NAME       Generic)
@@ -75,7 +75,7 @@ else()
     ProcessorCount(CPU_CORES)
 
     # Config CppCheck
-    set(CMAKE_C_CPPCHECK "${CMAKE_C_CPPCHECK}" --enable=all --force) #--error-exitcode=1 -j ${CPU_CORES} --quiet .
+    set(CMAKE_C_CPPCHECK "${CMAKE_C_CPPCHECK}" --enable=all --force --suppress=missingIncludeSystem --error-exitcode=1 ) #-j ${CPU_CORES} --quiet .
     message(STATUS "CPPCHECK CONFIGURATION:" ${CMAKE_C_CPPCHECK})       
 endif()
 
